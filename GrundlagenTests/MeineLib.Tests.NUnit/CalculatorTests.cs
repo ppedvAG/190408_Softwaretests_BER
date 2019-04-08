@@ -19,5 +19,21 @@ namespace MeineLib.Tests.NUnit
             Assert.AreEqual(8, result);
         }
 
+        // Normalfall mit TestCase
+        [Test]
+        [TestCase(1, 2, 3)]
+        [TestCase(-10, 20, 10)]
+        [TestCase(5, 6, 11)]
+        [Category("NUnit")]
+        public void Calculator_Sum(int z1, int z2, int expectedResult)
+        {
+            // Arrange
+            Calculator c = new Calculator();
+            // Act
+            int result = c.Sum(z1, z2);
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+        }
+
     }
 }
