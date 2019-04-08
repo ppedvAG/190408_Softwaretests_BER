@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MeineLib.Tests.XUnit
 {
-    public class Class1
+    public class CalculatorTests
     {
     }
 }
