@@ -35,5 +35,15 @@ namespace MeineLib.Tests.NUnit
             Assert.AreEqual(expectedResult, result);
         }
 
+        [TestCase("asd",false)]
+        [TestCase(-12,false)]
+        [TestCase(false,true)]
+        public void Calculator_Is_not_typeOf_Parameter(object parameter,bool expectedResult)
+        {
+            Calculator c = new Calculator();
+
+            Assert.Equals(expectedResult,c.Equals(parameter));
+        }
+
     }
 }
