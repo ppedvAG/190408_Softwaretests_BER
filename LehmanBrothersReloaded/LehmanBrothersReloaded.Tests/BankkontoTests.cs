@@ -97,5 +97,20 @@ namespace LehmanBrothersReloaded.Tests
         }
 
         // Zustand, den man eigentlich schon "Einchecken" kann => "Fahrplan" für die weitere Implementierung steht schon
+
+        // Was wenn man auf diese 2 Fälle vergisst ?
+        // Lösung: CodeCoverage-Tool von VisualStudio
+        [Test]
+        [TestCase(0,Wealth.Zero)]
+       // [TestCase(50,Wealth.Poor)]
+        [TestCase(500,Wealth.Ok)]
+       // [TestCase(5000,Wealth.Rich)]
+        [TestCase(50000,Wealth.FilthyRich)]
+        public void Banaccount_Wealth_get_correct_Wealth(decimal balance,Wealth expectedResult)
+        {
+            var ba = new Bankaccount(balance);
+
+            Assert.AreEqual(expectedResult, ba.Wealth);
+        }
     }
 }
