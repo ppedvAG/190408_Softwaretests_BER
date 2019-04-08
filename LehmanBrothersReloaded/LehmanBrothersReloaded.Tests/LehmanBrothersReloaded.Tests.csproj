@@ -54,6 +54,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LehmanBrothersReloaded\LehmanBrothersReloaded.csproj">
+      <Project>{589f15fd-e371-4fbb-ac0b-beb4c62cf178}</Project>
+      <Name>LehmanBrothersReloaded</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

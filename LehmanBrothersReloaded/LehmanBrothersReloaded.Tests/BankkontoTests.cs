@@ -96,7 +96,6 @@ namespace LehmanBrothersReloaded.Tests
             Assert.Throws<ArgumentException>(() => ba.Withdraw(-20m));
         }
 
-
-
+        // Zustand, den man eigentlich schon "Einchecken" kann => "Fahrplan" für die weitere Implementierung steht schon
     }
 }
