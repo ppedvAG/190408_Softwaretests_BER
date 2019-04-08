@@ -20,6 +20,21 @@ namespace MeineLib.Tests.MSTest
             // Assert
             Assert.AreEqual(8, result);
         }
+        // Normalfall mit DataRow
+        [TestMethod]
+        [DataRow(1,2,3)]
+        [DataRow(-10,20,10)]
+        [DataRow(5,6,11)]
+        [TestCategory("MSTest")]
+        public void Calculator_Sum(int z1, int z2, int expectedResult)
+        {
+            // Arrange
+            Calculator c = new Calculator();
+            // Act
+            int result = c.Sum(z1, z2);
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+        }
 
         // Null-Fall
         [TestMethod]
