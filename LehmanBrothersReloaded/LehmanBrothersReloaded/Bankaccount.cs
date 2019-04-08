@@ -2,7 +2,7 @@
 
 namespace LehmanBrothersReloaded
 {
-    public class Bankkonto
+    public class Bankaccount
     {
     }
 }
