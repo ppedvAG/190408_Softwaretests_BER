@@ -104,7 +104,7 @@ namespace LehmanBrothersReloaded.Tests
         [TestCase(0,Wealth.Zero)]
        // [TestCase(50,Wealth.Poor)]
         [TestCase(500,Wealth.Ok)]
-       // [TestCase(5000,Wealth.Rich)]
+        //[TestCase(5000,Wealth.Rich)]
         [TestCase(50000,Wealth.FilthyRich)]
         public void Banaccount_Wealth_get_correct_Wealth(decimal balance,Wealth expectedResult)
         {
