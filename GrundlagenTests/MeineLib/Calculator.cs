@@ -6,7 +6,10 @@ namespace MeineLib
     {
         public int Sum(int a, int b)
         {
-            return a + b;
+            checked // Prüft auf Arithmetische Über/Unterläufe
+            {
+                return a + b;
+            }
         }
     }
 }
