@@ -59,6 +59,14 @@ namespace ppedv.Antish.Logic
                              .First();
         }
 
+        public void InsertPeopleIntoDB(IEnumerable<Person> people)
+        {
+            foreach (Person p in people)
+            {
+                repository.Add(p);
+            }
+            repository.Save();
+        }
 
 
     }
