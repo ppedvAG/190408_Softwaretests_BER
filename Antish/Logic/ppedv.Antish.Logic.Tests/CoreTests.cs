@@ -41,5 +41,50 @@ namespace ppedv.Antish.Logic.Tests
             fakeHardware.Verify(x => x.RecruitPerson(), Times.Never());
         }
 
+        [Test]
+        public void Core_GetAllPeopleFromDB_Get_Exactly_5_People()
+        {
+            var dataBaseMock = new Mock<IRepository>();
+            dataBaseMock.Setup(x => x.GetAll<Person>())
+                        .Returns(() =>
+                        {
+                            return new Person[]
+                            {
+                                new Person{FirstName="Tom",LastName="Ate",Age=10,Balance=100},
+                                new Person{FirstName="Anna",LastName="Nass",Age=20,Balance=2000},
+                                new Person{FirstName="Peter",LastName="Silie",Age=30,Balance=-300},
+                                new Person{FirstName="Franz",LastName="Ose",Age=40,Balance=500},
+                                new Person{FirstName="Martha",LastName="Pfahl",Age=50,Balance=1234}
+                            };
+                        });
+
+            var core = new Core(dataBaseMock.Object);
+            var result = core.GetAllPeopleFromDB();
+
+            Assert.AreEqual(5, result.Count);
+        }
+
+        [Test]
+        public void Core_GetPersonWithHighestBalance_Returns_AnnaNass()
+        {
+            var dataBaseMock = new Mock<IRepository>();
+            dataBaseMock.Setup(x => x.GetAll<Person>())
+                        .Returns(() =>
+                        {
+                            return new Person[]
+                            {
+                                new Person{FirstName="Tom",LastName="Ate",Age=10,Balance=100},
+                                new Person{FirstName="Anna",LastName="Nass",Age=20,Balance=2000},
+                                new Person{FirstName="Peter",LastName="Silie",Age=30,Balance=-300},
+                                new Person{FirstName="Franz",LastName="Ose",Age=40,Balance=500},
+                                new Person{FirstName="Martha",LastName="Pfahl",Age=50,Balance=1234}
+                            };
+                        });
+
+            var core = new Core(dataBaseMock.Object);
+            var result = core.GetPersonWithHighestBalance();
+
+            Assert.AreEqual("Anna", result.FirstName); // Anna Nass
+        }
     }
 }
