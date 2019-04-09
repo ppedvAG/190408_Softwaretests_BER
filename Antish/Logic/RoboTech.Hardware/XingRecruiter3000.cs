@@ -11,8 +11,8 @@ namespace RoboTech.Hardware
 
         public Person RecruitPerson()
         {
-            Console.Beep(10000,250);
-            Console.Beep(8000,250);
+            Console.Beep(2000,250);
+            Console.Beep(500,250);
             return fix.Create<Person>();
         }
     }
