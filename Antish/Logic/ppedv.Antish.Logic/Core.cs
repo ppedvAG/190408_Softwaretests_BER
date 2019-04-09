@@ -22,6 +22,9 @@ namespace ppedv.Antish.Logic
          */
         public List<Person> RecruitPersons(int amount)
         {
+            if (amount < 0) // Trick mit Verify: Diese 2 Zeilen könnten auch viel später kommen und .RecruitPerson() könnte auch vor dem werfen der Exception einmal passieren...
+                throw new ArgumentException();
+
             List<Person> output = new List<Person>();
             for (int i = 0; i < amount; i++)
             {
