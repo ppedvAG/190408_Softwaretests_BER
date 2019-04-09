@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using NUnit.Framework;
 using ppedv.Antish.Domain;
 using System;
@@ -152,5 +153,71 @@ namespace ppedv.Antish.Data.EF.Tests
             }
         }
 
+        [Test]
+        [Category("Integrationstest: Funktioniert EF?")]
+        public void EFContext_can_CRUD_Person_Fluent_Autofixture()
+        {
+            var fix = new Fixture();
+            var p1 = fix.Create<Person>(); // einzelnes Objekt
+            // var tausendPersonen = fix.CreateMany<Person>(1000);
+
+            string newLastName = "Atinger";
+
+            // Create
+            using (var context = new EFContext(connectionString))
+            {
+                context.Person.Add(p1);
+                context.SaveChanges(); // Speichern !
+            }
+
+            // Grund für einen neuen Context: Person soll aus der DB und nicht aus dem Cache ausgelesen werden !!!
+            using (var context = new EFContext(connectionString))
+            {
+                // Check für Create + Read
+                var loadedPerson = context.Person.Find(p1.ID); // ID wird mit dem .Add() oben automatisch erstellt
+                loadedPerson.Should().NotBeNull();
+                loadedPerson.Should().BeEquivalentTo(p1); // Object-Graph, Vergleicht alle Properties
+
+                // Update
+                loadedPerson.LastName = newLastName;
+                context.SaveChanges();
+            }
+
+            using (var context = new EFContext(connectionString))
+            {
+                // Check für Update
+                var loadedPerson = context.Person.Find(p1.ID); // ID wird mit dem .Add() oben automatisch erstellt
+                loadedPerson.Should().NotBeNull();
+                loadedPerson.LastName.Should().Be(newLastName);
+
+                //Assert.NotNull(loadedPerson);
+                //Assert.AreEqual(newLastName, loadedPerson.LastName);
+
+                // Delete
+                context.Person.Remove(loadedPerson);
+                context.SaveChanges();
+            }
+
+            using (var context = new EFContext(connectionString))
+            {
+                // Check für Delete
+                var loadedPerson = context.Person.Find(p1.ID); // ID wird mit dem .Add() oben automatisch erstellt
+                loadedPerson.Should().BeNull();
+
+                //Assert.IsNull(loadedPerson);
+            }
+        }
+
+        [Test]
+        [Category("Integrationstest: Funktioniert EF?")]
+        public void Autofixture_can_create_5_companies()
+        {
+            var fix = new Fixture();
+            // Optional: Konfiguration
+            // fix.Behaviors.Add(new OmitOnRecursionBehavior()); //Zyklische Referenzen ausgelassen werden
+            var companies = fix.CreateMany<Company>(5).ToArray();
+
+            Assert.AreEqual(5, companies.Count());
+        }
     }
 }
