@@ -2,6 +2,7 @@
 using ppedv.Antish.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ppedv.Antish.Logic
 {
@@ -11,7 +12,12 @@ namespace ppedv.Antish.Logic
         {
             this.device = device;
         }
+        public Core(IRepository repository)
+        {
+            this.repository = repository;
+        }
 
+        private readonly IRepository repository;
         private readonly IDevice device;
 
         /* Irgendeine Logik, die meine Hardware intern verwendet
@@ -32,5 +38,22 @@ namespace ppedv.Antish.Logic
             }
             return output;
         }
+
+
+        // Logik in der die DB verwendet wird:
+        public List<Person> GetAllPeopleFromDB()
+        {
+            return repository.GetAll<Person>().ToList();
+        }
+
+        public Person GetPersonWithHighestBalance()
+        {
+            return repository.GetAll<Person>()
+                             .OrderByDescending(x => x.Balance)
+                             .First();
+        }
+
+
+
     }
 }
