@@ -32,7 +32,7 @@ namespace LehmanBrothersReloaded
                         return Wealth.Ok;
                     case decimal b when b < 10000:
                         return Wealth.Rich;
-                    case decimal b when b < 1000000:
+                    case decimal b when b >= 10000:
                         return Wealth.FilthyRich;
                     default:
                         return Wealth.Poor;

@@ -1,6 +1,8 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.QualityTools.Testing.Fakes;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,14 +68,51 @@ namespace LehmanBrothersReloaded.Tests
         public void OpeningHours_IsNowOpen()
         {
             var oh = new OpeningHours();
-
-            var result = oh.IsNowOpen();
-
             // Interpretationsproblem: zwischen 14:00 und 17:00 ists True, ansonsten False
             // Abhängigkeit auf DateTime.Now auflösen
             // 1) Fakes-Framework (VS Enterprise)
             // 2) Pose (Kostenlos)
-            // 3) TypeMock (kostenpflichtig)v
+            // 3) TypeMock (kostenpflichtig)
+
+            // Variante Fakes:
+
+            using (ShimsContext.Create())
+            {
+                // Nur hier drinnen sind unsere Fakes gültig
+
+                // Nach dieser Zeile Code liefert DateTime.Now IMMER das folgend definierte Ergebnis zurück:
+                System.Fakes.ShimDateTime.NowGet = () => new DateTime(2019, 1, 1, 11, 11, 59);
+                var result = oh.IsNowOpen();
+                Assert.IsTrue(result); // Di um 11:11 -> Offen
+
+                // Andere feste Abhängigkeiten auflösen:
+                // System.IO.File
+
+                System.IO.Fakes.ShimFile.ExistsString = parameter => true;
+
+                Assert.IsTrue(File.Exists("7:\\kbjasdbkjas%/@@@.jpg"));
+
+                //System.Fakes.ShimDateTime.NowGet = () => new DateTime(2019, 1, 2, 11, 11, 59);
+                //result = oh.IsNowOpen();
+                //Assert.IsTrue(result); // Di um 11:11 -> Offen
+            }
+
+            // Nach dem Using: Alles wieder wie Normal !
+            // Zusammengefasst:
+            // Perfekt um Daten zu Simulieren
+            // Sensor sagt: "zu kalt", "zu warm", "es BRENNT", --keine daten--  => Grenzfälle simulieren
+            // Ideal: keine "echte Datenbankverbindung" => sehr schnelle Daten
+
+            // Fake auf einer Instanz:
+
+            using (ShimsContext.Create())
+            {
+                LehmanBrothersReloaded.Fakes.ShimBankaccount.AllInstances.BalanceGet = x => 100_000_000m;
+
+                var ba = new Bankaccount(); // realer Kontostand: 0
+
+                Assert.AreEqual(Wealth.FilthyRich, ba.Wealth);
+            }
         }
     }
 }
