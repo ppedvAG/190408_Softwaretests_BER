@@ -1,0 +1,408 @@
+Hallo vom Michi :)
+Hallo von Jürgen :-)
+
+Links:
+https://github.com/ppedvAG/190408_Softwaretests_BER
+https://docs.microsoft.com/de-de/visualstudio/test/isolating-code-under-test-with-microsoft-fakes?view=vs-2019
+https://github.com/tonerdo/pose
+https://www.sqlshack.com/install-microsoft-sql-server-express-localdb/
+https://specflow.org/getting-started/
+https://github.com/AutoFixture/AutoFixture/wiki/Cheat-Sheet
+https://github.com/Moq/moq4/wiki/Quickstart
+
+
+
+Connection: "(LocalDB)\MSSQLLocalDB"
+
+
+        [Theory]
+        [InlineData(1, 2, 3)]
+        [InlineData(-10, 20, 10)]
+        [InlineData(5, 6, 11)]
+        [Trait("Xunit",null)]
+        //Klassenname_Methodenname_Szenario_erwartetesErgebnis
+        public void Calculator_Sum_(int x1, int x2, int expectedResult)
+        {
+            //Referenz hinzufügen
+            Calculator calc = new Calculator();
+
+            int result = calc.Sum(x1, x2);
+
+            Assert.ex(expectedResult, result);
+        }
+        
+        
+    public class Person
+    {
+        public string Vorname { get; set; }
+        public string Nachname { get; set; }
+        public byte Alter { get; set; }
+        public decimal Kontostand { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            // Bedingungen:
+            /*
+             * Wenn die Datentypen unterschiedlich sind -> return false
+             * Wenn der Parameter "null" ist -> ArgumentNullException
+             * Wenn die Referenzen gleich sind -> return true
+             *   --> Wenn die Werte gleich sind -> return true
+             */ 
+        }
+    }
+    
+            public override bool Equals(object obj)
+        {
+            // Bedingungen:
+            /*
+             * X - Wenn die Datentypen unterschiedlich sind -> return false 
+             * X - Wenn der Parameter "null" ist -> ArgumentNullException
+             * X - Wenn die Referenzen gleich sind -> return true
+             * x - --> Wenn die Werte gleich sind -> return true
+             */
+            if (obj is null) // Seit C# 7 ebenfalls möglich
+                throw new ArgumentNullException();
+            if (!(obj is Person))
+                return false;
+
+            if (this == obj) // Referenzgleich
+                return true;
+
+            // Wertevergleich
+            var person2 = (Person)obj;
+            if (this.Vorname == person2.Vorname &&
+                this.Nachname == person2.Nachname &&
+                this.Alter == person2.Alter &&
+                this.Kontostand == person2.Kontostand)
+                return true;
+            else
+                return false;
+        }
+        
+        
+            [TestFixture]
+    [Category("Personentests")]
+    class PersonTests
+    {
+        [Test]
+        public void Person_Equals_with_Parameter_Null_Throws_ArgumentNullException()
+        {
+            Person p1 = new Person { Vorname = "Tom", Nachname = "Ate", Alter = 10, Kontostand = 100 };
+            Assert.Throws<ArgumentNullException>(() => p1.Equals(null));
+        }
+
+        [Test]
+        [Category("Personentests")]
+        public void Person_Equals_with_wrong_Type_returns_false()
+        {
+            Person p1 = new Person { Vorname = "Tom", Nachname = "Ate", Alter = 10, Kontostand = 100 };
+            StringBuilder sb = new StringBuilder(); // <--- Kann leider nicht mit TestCase genutzt werden
+            object o1 = new object(); // <--- Kann leider nicht mit TestCase genutzt werden
+            int zahl1 = 12;
+            string text1 = "asdasd";
+
+            Assert.IsFalse(p1.Equals(sb));
+            Assert.IsFalse(p1.Equals(o1));
+            Assert.IsFalse(p1.Equals(zahl1));
+            Assert.IsFalse(p1.Equals(text1));
+        }
+
+        [Test]
+        [Category("Personentests")]
+        public void Person_Equals_with_same_reference_returns_true()
+        {
+            Person p1 = new Person { Vorname = "Tom", Nachname = "Ate", Alter = 10, Kontostand = 100 };
+            Person p2 = p1; // Referenzkopie
+
+            Assert.IsTrue(p1.Equals(p2));
+        }
+
+        [Test]
+        [Category("Personentests")]
+        public void Person_Equals_with_person_that_has_same_values_returns_true()
+        {
+            Person p1 = new Person { Vorname = "Tom", Nachname = "Ate", Alter = 10, Kontostand = 100 };
+            Person p2 = new Person { Vorname = "Tom", Nachname = "Ate", Alter = 10, Kontostand = 100 };
+
+            Assert.IsTrue(p1.Equals(p2));
+        }
+    }
+    
+        [TestFixture]
+    public class BankAccountTests
+    {
+        [Test]
+        public void Bankaccount_new_account_has_0_balance()
+        {
+            var ba = new Bankaccount();
+            Assert.Zero(ba.Balance);
+        }
+        [Test]
+        [TestCase(100)]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        public void Bankaccount_new_account_gets_Balance_from_Constructor(decimal defaultBalance)
+        {
+            var ba = new Bankaccount(defaultBalance);
+
+            Assert.AreEqual(defaultBalance, ba.Balance);
+        }
+        [Test]
+        [TestCase(-100)]
+        [TestCase(-1000)]
+        [TestCase(-10000)]
+        public void Bankaccount_new_account_gets_invalid_Balance_in_constructor_throws_ArgumentException(decimal invalidBalance)
+        {
+           Assert.Throws<ArgumentException>( () => new Bankaccount(invalidBalance));
+        }
+
+        [Test]
+        public void Bankaccount_can_deposit()
+        {
+            var ba = new Bankaccount();
+
+            ba.Deposit(5m);
+            Assert.AreEqual(5m, ba.Balance);
+
+            ba.Deposit(3m);
+            Assert.AreEqual(8m, ba.Balance); // Test für Draufaddieren
+        }
+
+        // "ähhhhh was wenn der Kunde aber 0 einzahlt ?"
+        // "ähhhhh was wenn der Kunde aber -20m einzahlt ?"
+        // Wir sind jetzt genau noch in der Planungsphase und können die UnitTests dementsprechend anpassen
+
+        [Test]
+        public void Bankaccount_Deposit_0_does_not_change_Balance()
+        {
+            var ba = new Bankaccount();
+            ba.Deposit(5m); // Startwert
+
+            var oldValue = ba.Balance;
+            ba.Deposit(0m);
+
+            Assert.AreEqual(oldValue, ba.Balance);
+        }
+
+        [Test]
+        public void Bankaccount_Deposit_negative_value_throws_ArgumentException()
+        {
+            var ba = new Bankaccount();
+            Assert.Throws<ArgumentException>(() =>  ba.Deposit(-20m));
+        }
+
+        [Test]
+        public void Bankaccount_can_Withdraw()
+        {
+            var ba = new Bankaccount(10m);
+
+            ba.Withdraw(3m);
+            Assert.AreEqual(7m, ba.Balance);
+
+            ba.Withdraw(5m);
+            Assert.AreEqual(2m, ba.Balance);
+        }
+
+        [Test]
+        public void Bankaccount_Withdraws_more_than_balance_throws_InvalidOperationException()
+        {
+            var ba = new Bankaccount();
+            Assert.Throws<InvalidOperationException>(() => ba.Withdraw(3m));
+        }
+
+        [Test]
+        public void Bankaccount_Withdraw_negative_value_throws_ArgumentException()
+        {
+            var ba = new Bankaccount();
+            Assert.Throws<ArgumentException>(() => ba.Withdraw(-20m));
+        }
+
+    }
+    
+    
+        [Test]
+        [TestCase(2019, 4, 8, 10, 29, 00, false)]// Mo
+        [TestCase(2019, 4, 8, 10, 30, 00, true)] // Mo
+        [TestCase(2019, 4, 8, 12, 30, 00, true)] // Mo
+        [TestCase(2019, 4, 8, 19, 00, 00, true)] // Mo
+        [TestCase(2019, 4, 8, 19, 01, 00, false)] // Mo
+        [TestCase(2019, 4, 8, 22, 00, 00, false)] // Mo
+        [TestCase(2019, 4,9, 10, 29, 00, false)]// Di
+        [TestCase(2019, 4,9, 10, 30, 00, true)] // Di
+        [TestCase(2019, 4,9, 12, 30, 00, true)] // Di
+        [TestCase(2019, 4,9, 19, 00, 00, true)] // Di
+        [TestCase(2019, 4,9, 19, 01, 00, false)] //Di
+        [TestCase(2019, 4,9, 22, 00, 00, false)] //Di
+        [TestCase(2019, 4, 10, 10, 29, 00, false)]// Mi
+        [TestCase(2019, 4, 10, 10, 30, 00, true)] // Mi
+        [TestCase(2019, 4, 10, 12, 30, 00, true)] // Mi
+        [TestCase(2019, 4, 10, 19, 00, 00, true)] // Mi
+        [TestCase(2019, 4, 10, 19, 01, 00, false)] //Mi
+        [TestCase(2019, 4, 10, 22, 00, 00, false)] //Mi
+        [TestCase(2019, 4, 11, 10, 29, 00, false)]// Do
+        [TestCase(2019, 4, 11, 10, 30, 00, true)] // Do
+        [TestCase(2019, 4, 11, 12, 30, 00, true)] // Do
+        [TestCase(2019, 4, 11, 19, 00, 00, true)] // Do
+        [TestCase(2019, 4, 11, 19, 01, 00, false)] //Do
+        [TestCase(2019, 4, 11, 22, 00, 00, false)] //Do
+        [TestCase(2019, 4, 12, 10, 29, 00, false)]// Fr
+        [TestCase(2019, 4, 12, 10, 30, 00, true)] // Fr
+        [TestCase(2019, 4, 12, 12, 30, 00, true)] // Fr
+        [TestCase(2019, 4, 12, 19, 00, 00, true)] // Fr
+        [TestCase(2019, 4, 12, 19, 01, 00, false)] //Fr
+        [TestCase(2019, 4, 12, 22, 00, 00, false)] //Fr
+        [TestCase(2019, 4, 13, 10, 29, 00, false)]// Sa
+        [TestCase(2019, 4, 13, 10, 30, 00, true)] // Sa
+        [TestCase(2019, 4, 13, 12, 30, 00, true)] // Sa
+        [TestCase(2019, 4, 13, 14, 00, 00, true)] // Sa
+        [TestCase(2019, 4, 13, 14, 01, 00, false)] //Sa
+        [TestCase(2019, 4, 13, 22, 00, 00, false)] //Sa
+        [TestCase(2019, 4, 14, 10, 29, 00, false)]// So
+        [TestCase(2019, 4, 14, 10, 30, 00, false)] //So
+        [TestCase(2019, 4, 14, 12, 30, 00, false)] //So
+        [TestCase(2019, 4, 14, 14, 00, 00, false)] //So
+        [TestCase(2019, 4, 14, 14, 01, 00, false)] //So
+        [TestCase(2019, 4, 14, 22, 00, 00, false)] //So
+        
+        public bool IsOpen(DateTime time)
+        {
+            switch (time.DayOfWeek)
+            {
+                case DayOfWeek.Monday:
+                case DayOfWeek.Tuesday:
+                case DayOfWeek.Wednesday:
+                case DayOfWeek.Thursday:
+                case DayOfWeek.Friday:
+                    // 10:30 - 19:00 offen
+                    if (time.Hour == 10) // Sonderfall: Punkt 10:30
+                        if (time.Minute >= 30)
+                            return true;
+                        else
+                            return false;
+                    if (time.Hour == 19) // Sonderfall: Punkt 19:00
+                        if (time.Minute == 00)
+                            return true;
+                        else
+                            return false;
+                    if (time.Hour >= 10 && time.Hour <= 18)
+                        return true;
+                    else
+                        return false;
+                case DayOfWeek.Saturday:
+                    // 10:30 - 14:00 offen
+                    if (time.Hour == 10)
+                        if (time.Minute >= 30)
+                            return true;
+                        else
+                            return false;
+                    if (time.Hour == 14) // Sonderfall: Punkt 19:00
+                        if (time.Minute == 00)
+                            return true;
+                        else
+                            return false;
+
+                    if (time.Hour >= 10 && time.Hour <= 13)
+                        return true;
+                    else
+                        return false;
+                default: // Sunday
+                    return false;
+            }
+        }
+        
+                        switch (Balance) // Pattern Matching C# 7
+                {
+                    case 0:
+                        return Wealth.Zero;
+                    case decimal b when b < 0:
+                        return Wealth.Debt;
+                    case decimal b when b < 100:
+                        return Wealth.Poor;
+                    case decimal b when b < 1000:
+                        return Wealth.Ok;
+                    default:
+                        return Wealth.Poor;
+                }
+                
+                
+        [Test]
+        public void OpeningHours_IsNowOpen_Pose()
+        {
+            Shim dateTimeShim = Shim.Replace(() => DateTime.Now)
+                                    .With(() => new DateTime(1856, 3, 12, 12, 00, 00));
+            DateTime original = DateTime.Now;
+
+            PoseContext.Isolate(() =>
+            {
+                original = DateTime.Now; // Ab jetzt fake
+
+            }, dateTimeShim);
+
+            Assert.AreEqual(new DateTime(1856, 3, 12, 12, 00, 00), original);
+        }
+        
+        
+            public abstract class Entity
+    {
+        public int ID { get; set; }
+    }
+
+    public class Person : Entity
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public byte Age { get; set; }
+        public decimal Balance { get; set; }
+    }
+
+    public class Department : Entity
+    {
+        public string Name { get; set; }
+        public virtual Person HeadOfDepartment { get; set; }
+        public virtual HashSet<Person> Members { get; set; } = new HashSet<Person>();
+    }
+
+    public class Company : Entity
+    {
+        public string Name { get; set; }
+        public virtual HashSet<Department> Departments { get; set; } = new HashSet<Department>();
+        public DateTime FoundingYear { get; set; }
+        public decimal AnnualIncome { get; set; }
+    }
+    
+        //public EFContext() : this(@"Server=.;Database=Antish_ProduktionsDB;Trusted_Connection=true") { }
+        public EFContext() : this(@"Server=(localDB)\MSSQLLocalDB;Database=Antish_ProduktionsDB;Trusted_Connection=true;AttachDbFileName=C:\temp\antish.mdf") { }
+        
+        
+                /* Irgendeine Logik, die meine Hardware intern verwendet
+         * Problem: Man muss den Core testen, ohne dass das echte Gerät (Device) angesteuert wird
+         * => Testgeräte verwenden
+         * Neues Problem: Es steht nicht überall ein Testgerät/Roboterarm etc zur Verfügung
+         * => Mocks
+         */
+        public List<Person> RecruitPersons(int amount)
+        {
+            List<Person> output = new List<Person>();
+            for (int i = 0; i < amount; i++)
+            {
+                output.Add(device.RecruitPerson()); // Echtgerät aufrufen
+            }
+            return output;
+        }
+        
+        
+        
+            var dataBaseMock = new Mock<IRepository>();
+            dataBaseMock.Setup(x => x.GetAll<Person>())
+                        .Returns(() =>
+                        {
+                            return new Person[]
+                            {
+                                new Person{FirstName="Tom",LastName="Ate",Age=10,Balance=100},
+                                new Person{FirstName="Anna",LastName="Nass",Age=20,Balance=2000},
+                                new Person{FirstName="Peter",LastName="Silie",Age=30,Balance=-300},
+                                new Person{FirstName="Franz",LastName="Ose",Age=40,Balance=500},
+                                new Person{FirstName="Martha",LastName="Pfahl",Age=50,Balance=1234}
+                            };
+                        });
+       
