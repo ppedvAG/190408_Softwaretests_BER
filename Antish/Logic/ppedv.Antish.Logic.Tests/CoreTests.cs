@@ -86,5 +86,17 @@ namespace ppedv.Antish.Logic.Tests
 
             Assert.AreEqual("Anna", result.FirstName); // Anna Nass
         }
+
+        // Akzeptanztest - Pseudocode
+        //  public void Generate_5_Persons_and_save_in_DB()
+        //  {
+        //      var core = new Core(null);
+           
+        //      var persons = core.RecruitPersons(5);
+        //      core.InsertPersonsIntoDB(persons);
+           
+        //      var personsFromDB = core.GetAllPeopleFromDB(); // müssten jetzt 5 sein
+        //      Assert.AreEqual(5, personsFromDB.Count);
+        //  }
     }
 }
