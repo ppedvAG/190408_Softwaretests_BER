@@ -1,5 +1,6 @@
 ﻿using Microsoft.QualityTools.Testing.Fakes;
 using NUnit.Framework;
+using Pose;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -113,6 +114,22 @@ namespace LehmanBrothersReloaded.Tests
 
                 Assert.AreEqual(Wealth.FilthyRich, ba.Wealth);
             }
+        }
+
+        [Test]
+        public void OpeningHours_IsNowOpen_Pose()
+        {
+            Shim dateTimeShim = Shim.Replace(() => DateTime.Now)
+                                    .With(() => new DateTime(1856, 3, 12, 12, 00, 00));
+            DateTime original = DateTime.Now;
+
+            PoseContext.Isolate(() =>
+            {
+                original = DateTime.Now; // Ab jetzt fake
+
+            }, dateTimeShim);
+
+            Assert.AreEqual(new DateTime(1856, 3, 12, 12, 00, 00), original);
         }
     }
 }
