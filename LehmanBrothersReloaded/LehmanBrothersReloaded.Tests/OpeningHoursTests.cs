@@ -60,5 +60,20 @@ namespace LehmanBrothersReloaded.Tests
 
             Assert.AreEqual(expectedResult, oh.IsOpen(dt));
         }
+
+
+        [Test]
+        public void OpeningHours_IsNowOpen()
+        {
+            var oh = new OpeningHours();
+
+            var result = oh.IsNowOpen();
+
+            // Interpretationsproblem: zwischen 14:00 und 17:00 ists True, ansonsten False
+            // Abhängigkeit auf DateTime.Now auflösen
+            // 1) Fakes-Framework (VS Enterprise)
+            // 2) Pose (Kostenlos)
+            // 3) TypeMock (kostenpflichtig)v
+        }
     }
 }

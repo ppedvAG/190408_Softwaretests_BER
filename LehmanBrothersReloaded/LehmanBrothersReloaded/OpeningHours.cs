@@ -51,5 +51,10 @@ namespace LehmanBrothersReloaded
                     return false;
             }
         }
+
+        public bool IsNowOpen()
+        {
+            return IsOpen(DateTime.Now); // Aktuelle Uhrzeit
+        }
     }
 }
