@@ -11,6 +11,7 @@ namespace RoboTech.Hardware.Tests
     public class XingRecruiter3000Tests
     {
         [Test]
+        [Category("Hardware-Test")] // Hardwarehersteller testet auf echter Hardware
         public void XingRecruiter3000_can_recruit_person()
         {
             var recruiter = new XingRecruiter3000();
