@@ -17,6 +17,12 @@ namespace ppedv.Antish.Logic
             this.repository = repository;
         }
 
+        public Core(IRepository repository,IDevice device)
+        {
+            this.repository = repository;
+            this.device = device;
+        }
+
         private readonly IRepository repository;
         private readonly IDevice device;
 
